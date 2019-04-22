@@ -19,12 +19,12 @@ An example input is provided in test.txt. For a larger example, see grammar.txt.
 
 ## Interface:
 ### Output
-| Option Name   | Option               |
-|:--------------|:---------------------|
-| first set:    | `-fi \| --first_set` |
-| follow set:   | `-fo \| --follow_set`|
-| parsing table:| `-t \| --table`      |
-|parsing table with scan and pop errors: | `-te \| --table_errors` |
+| Option Name   | Option               | NOTES |
+|:--------------|:---------------------|-------|
+| first set:    | `-fi \| --first_set` | |
+| follow set:   | `-fo \| --follow_set`| |
+| parsing table:| `-t \| --table`      | |
+|parsing table with scan and pop errors: | `-e \| --table_errors` | doesn't work without -t |
 
 ## Output Formats:
 | Option Name | Option |  Notes  |
