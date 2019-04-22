@@ -1,0 +1,97 @@
+INIT                -> CLASSDECL_EBNF Class_list_action FUNCDEF_EBNF Func_def_list_action main_kw STATBLOCK Statblock_action semicolon Prog_action
+CLASSDECL_EBNF      -> CLASSDECL Class_decl_action CLASSDECL_EBNF
+CLASSDECL_EBNF      -> EPSILON
+CLASSDECL           -> class_kw Id_action id COLON_ID_COMMA_EBNF Inher_list_action ocb VAR_OR_FUNC_DECL Memb_list_action ccb semicolon
+VAR_OR_FUNC_DECL    -> TYPE Id_action id VAR_OR_FUNC_CONT Memb_decl_action VAR_OR_FUNC_DECL
+VAR_OR_FUNC_DECL    -> EPSILON
+VAR_OR_FUNC_CONT    -> orb FPARAMS Fparams_list_action crb semicolon Func_decl_action
+VAR_OR_FUNC_CONT    -> ARRAYSIZE_EBNF Dim_list_action semicolon Var_decl_action
+COLON_ID_COMMA_EBNF -> colon Id_action id COMMA_ID_EBNF
+COLON_ID_COMMA_EBNF -> EPSILON
+COMMA_ID_EBNF       -> comma Id_action id COMMA_ID_EBNF
+COMMA_ID_EBNF       -> EPSILON
+FUNCHEAD            -> TYPE Id_action id ID_SR_EBNF Scope_spec_action orb FPARAMS Fparams_list_action crb
+ID_SR_EBNF          -> sr Id_action id ID_SR_EBNF
+ID_SR_EBNF          -> EPSILON
+FUNCDEF_EBNF        -> FUNCDEF Func_def_action FUNCDEF_EBNF
+FUNCDEF_EBNF        -> EPSILON
+FUNCDEF             -> FUNCHEAD STATBLOCK Statblock_action semicolon
+V_OR_S_EBNF         -> VARDECL_OR_STATMNT Var_decl_or_stat_action V_OR_S_EBNF
+V_OR_S_EBNF         -> EPSILON
+VARDECL_OR_STATMNT  -> NONID_VARDECL Var_decl_action 
+VARDECL_OR_STATMNT  -> NONASSIGN_STATMNT Statement_action 
+VARDECL_OR_STATMNT  -> Id_action id ID_VAR_OR_STATMNT 
+ID_VAR_OR_STATMNT   -> Switch_id_for_type_action Id_action id ARRAYSIZE_EBNF Dim_list_action Var_decl_action semicolon
+ID_VAR_OR_STATMNT   -> VARIABLE_SWITCH Variable_action ASSIGNOP EXPR Assign_stat_action semicolon Statement_action
+NONID_VARDECL       -> Type_action integer_kw Id_action id ARRAYSIZE_EBNF Dim_list_action semicolon
+NONID_VARDECL       -> Type_action float_kw Id_action id ARRAYSIZE_EBNF Dim_list_action semicolon
+STATEMENT           -> ASSIGNSTAT semicolon Statement_action
+STATEMENT           -> NONASSIGN_STATMNT Statement_action
+NONASSIGN_STATMNT   -> if_kw orb RELEXPR crb then_kw STATBLOCK Statblock_action else_kw STATBLOCK Statblock_action semicolon If_action
+NONASSIGN_STATMNT   -> for_kw orb TYPE Id_action id ASSIGNOP EXPR semicolon RELEXPR semicolon ASSIGNSTAT crb STATBLOCK Statblock_action semicolon For_action
+NONASSIGN_STATMNT   -> read_kw orb VARIABLE Variable_action crb semicolon Read_action
+NONASSIGN_STATMNT   -> write_kw orb EXPR crb semicolon Write_action
+NONASSIGN_STATMNT   -> return_kw orb EXPR crb semicolon Return_action
+ASSIGNSTAT          -> VARIABLE Variable_action ASSIGNOP EXPR Assign_stat_action
+STATBLOCK           -> ocb V_OR_S_EBNF ccb
+STATBLOCK           -> VARDECL_OR_STATMNT Var_decl_or_stat_action
+STATBLOCK           -> EPSILON
+EXPR                -> ARITHEXPR MAYBE_RELOP Expr_action
+MAYBE_RELOP         -> Expr_action RELOP ARITHEXPR Expr_action Relexpr_action
+MAYBE_RELOP         -> EPSILON
+RELEXPR             -> EXPR RELOP EXPR Relexpr_action
+ARITHEXPR           -> TERM ARITHEXPR_PRIME Arithexpr_action
+ARITHEXPR_PRIME     -> ADDOP TERM ARITHEXPR_PRIME
+ARITHEXPR_PRIME     -> EPSILON
+SIGN                -> Sign_action plus_sym
+SIGN                -> Sign_action minus_sym
+TERM                -> FACTOR TERM_PRIME Term_action
+TERM_PRIME          -> MULTOP FACTOR TERM_PRIME
+TERM_PRIME          -> EPSILON
+FACTOR              -> Id_action id INDICE_OR_PARAMS Var_element_action IDNEST_EBNF_SWITCH Variable_action Factor_action
+FACTOR              -> Num_action integer Factor_action
+FACTOR              -> Num_action float Factor_action
+FACTOR              -> orb ARITHEXPR crb Factor_action
+FACTOR              -> not_kw FACTOR Factor_action Set_not_action
+FACTOR              -> SIGN FACTOR Factor_action Set_sign_action
+VARIABLE            -> Id_action id INDICE_EBNF Index_list_action MORE Maybe_data_member_action Var_element_action
+MORE                -> orb APARAMS Aparams_action crb Fcall_action Var_element_action period VARIABLE
+MORE                -> Data_member_action Var_element_action period VARIABLE
+MORE                -> EPSILON
+VARIABLE_SWITCH     -> INDICE_EBNF Index_list_action Data_member_action Var_element_action IDNEST_EBNF_SWITCH
+IDNEST_EBNF_SWITCH  -> period Id_action id INDICE_OR_PARAMS Var_element_action IDNEST_EBNF_SWITCH
+IDNEST_EBNF_SWITCH  -> EPSILON
+INDICE_OR_PARAMS    -> INDICE_EBNF Index_list_action Data_member_action
+INDICE_OR_PARAMS    -> orb APARAMS Aparams_action crb Fcall_action
+INDICE_EBNF         -> INDICE INDICE_EBNF
+INDICE_EBNF         -> EPSILON
+INDICE              -> osb ARITHEXPR csb
+ARRAYSIZE_EBNF      -> ARRAYSIZE ARRAYSIZE_EBNF
+ARRAYSIZE_EBNF      -> EPSILON
+ARRAYSIZE           -> osb Num_action integer csb
+TYPE                -> Type_action integer_kw
+TYPE                -> Type_action float_kw
+TYPE                -> Type_action id
+FPARAMS             -> TYPE Id_action id ARRAYSIZE_EBNF Dim_list_action Fparam_action FPARAMSTAIL_EBNF
+FPARAMS             -> EPSILON
+APARAMS             -> EXPR APARAMSTAIL_EBNF
+APARAMS             -> EPSILON
+FPARAMSTAIL_EBNF    -> FPARAMSTAIL FPARAMSTAIL_EBNF
+FPARAMSTAIL_EBNF    -> EPSILON
+FPARAMSTAIL         -> comma TYPE Id_action id ARRAYSIZE_EBNF Dim_list_action Fparam_action
+APARAMSTAIL_EBNF    -> APARAMSTAIL APARAMSTAIL_EBNF
+APARAMSTAIL_EBNF    -> EPSILON
+APARAMSTAIL         -> comma EXPR
+ASSIGNOP            -> assignment
+RELOP               -> Relop_action eq
+RELOP               -> Relop_action neq
+RELOP               -> Relop_action lt
+RELOP               -> Relop_action gt
+RELOP               -> Relop_action leq
+RELOP               -> Relop_action geq
+ADDOP               -> Addop_action plus_sym
+ADDOP               -> Addop_action minus_sym
+ADDOP               -> Addop_action or_kw
+MULTOP              -> Multop_action star_sym
+MULTOP              -> Multop_action divide_sym
+MULTOP              -> Multop_action and_kw

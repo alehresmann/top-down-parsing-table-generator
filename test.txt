@@ -1,0 +1,8 @@
+INIT    -> T EPRIME
+EPRIME  -> plus T EPRIME
+EPRIME  -> EPSILON
+T       -> F TPRIME
+TPRIME  -> star F TPRIME
+TPRIME  -> EPSILON
+F       -> orb INIT crb
+F       -> id
