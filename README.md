@@ -2,6 +2,10 @@
 The following script take in the syntactic definition of a programming language (i.e. as a grammar) and generates the resulting parsing table for a top-down parser. If you are only interested in the first or follow sets, you can directly pull those too. For more information on what a parser is, see [the wikipedia page on it](https://en.wikipedia.org/wiki/Parsing).
 ## Input
 An example input is provided in test.txt. For a larger example, see grammar.txt. Note that the input format is *not* validated, so if you wrongly give an input you may get some errors.
+
+**Your grammar must be LL(1) !**
+A good way to check is to use the kfGEdit tool from AtoCC: [download link](http://atocc.de/download/atocc/AtoCC.zip)
+
 **The expected format is as follows:**
 * one rule per line
 * nonterminal variables are in upper case
