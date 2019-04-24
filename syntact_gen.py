@@ -365,7 +365,6 @@ def main():
             # flip the code and name and sort
             data = sorted([(key, sorted(value))
                            for key, value in follow.items()])
-            print(data)
             print(tabulate(data))
         if args.table:
             data = list()
